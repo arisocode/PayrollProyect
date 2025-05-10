@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to bottom right, #f0f4ff, #dfe9f3);
+  color: #333;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  background: linear-gradient(to right, #0f62fe, #5ab2ff);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 50px;
+}
+
+.main-content {
+  display: flex;
+  padding: 2rem;
+  gap: 2rem;
+  flex-grow: 1;
+}
+
+.modules-section {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.module-button {
+  background: white;
+  border: 2px solid #0f62fe;
+  color: #0f62fe;
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.module-button:hover {
+  background: #0f62fe;
+  color: white;
+}
+
+.employee-status {
+  flex: 1;
+  max-width: 35%;
+  background-color: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.employee-status h2 {
+  margin-bottom: 1rem;
+  color: #0f62fe;
+}
+
+.status {
+  margin-bottom: 0.8rem;
+}
+
+.status.activo {
+  color: green;
+}
+
+.status.inactivo,
+.status.incapacitada {
+  color: crimson;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: normal;
+}
+
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.form-container {
+  padding: 3rem;
+  max-width: 1000px; /* Ampliamos aún más el ancho */
+  margin: auto;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.form-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #0f62fe;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between; /* Asegura que haya espacio entre las dos columnas */
+  gap: 4rem; /* Aumentamos aún más el espacio entre las columnas */
+  margin-bottom: 3rem; /* Añadimos más espacio entre las filas */
+}
+
+.form-column-left,
+.form-column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem; /* Más espacio entre los campos dentro de cada columna */
+  flex: 1;
+}
+
+input,
+select {
+  padding: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: #0f62fe;
+  outline: none;
+}
+
+button {
+  padding: 1.2rem; /* Hicimos el botón un poco más grande */
+  background-color: #0f62fe;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%; /* Hacemos el botón ocupar todo el ancho disponible */
+}
+
+button:hover {
+  background-color: #0050c4;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.button-inline {
+  display: flex;
+  gap: 1rem;
+}
+
