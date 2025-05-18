@@ -1,17 +1,21 @@
-import React from 'react';
 import { FaBuilding, FaClock, FaDollarSign, FaFileContract, FaMoneyCheckAlt, FaUserTie, FaUsers } from 'react-icons/fa';
 import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
 import '../App.css';
 import BankPage from './BankPage';
+import ContractPage from './ContractPage';
+import ContractTypePage from './ContractTypePage';
 import EmpleadoPage from './EmployeePage';
+import { default as PositionPage, default as PositionPage2 } from './PositionPage';
+import SchedulePage from './SchedulePage';
+import ThirdPartyPage from './ThirdPartyPage';
 
 const modules = [
   { name: 'Empleados', icon: <FaUserTie />, route: '/empleados' },
-  { name: 'Terceros', icon: <FaUsers /> },
-  { name: 'Contratos', icon: <FaFileContract /> },
+  { name: 'Terceros', icon: <FaUsers />, route: '/terceros' },
+  { name: 'Contratos', icon: <FaFileContract />, route: '/contratos' },
   { name: 'Bancos', icon: <FaBuilding />, route: '/bancos' },
   { name: 'Novedades', icon: <FaClock /> },
-  { name: 'Cargos', icon: <FaUserTie /> },
+  { name: 'Cargos', icon: <FaUserTie />, route: '/cargos' },
   { name: 'Liquidación de Nómina', icon: <FaDollarSign /> },
   { name: 'Liquidación de Cesantías', icon: <FaMoneyCheckAlt /> },
   { name: 'Liquidación Definitiva', icon: <FaMoneyCheckAlt /> },
@@ -78,6 +82,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/empleados" element={<EmpleadoPage />} />
         <Route path="/bancos" element={<BankPage />} />
+        <Route path="/cargos" element={<PositionPage />} />
+        <Route path="/contratos" element={<ContractPage />} />
+        <Route path="/cargoss" element={<PositionPage2 />} />
+        <Route path="/tipos" element={<ContractTypePage />} />
+        <Route path="/horarios" element={<SchedulePage />} />
+        <Route path="/terceros" element={<ThirdPartyPage />} />
       </Routes>
     </Router>
   );

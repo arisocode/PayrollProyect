@@ -1,7 +1,5 @@
 package co.edu.unbosque.db2.payroll_proyect.model.entity;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,8 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Employee")
-public class Employee {
+@Table(name = "Thirdparty")
+public class Thirdparty {
 
     @Id
     @Column(name = "Id", nullable = false)
@@ -26,20 +24,11 @@ public class Employee {
     @Column(name = "Name", length = 100)
     private String name;
 
-    @Column(name = "Status")
-    private Boolean status;
-
-    @Column(name = "Birthdate")
-    private LocalDate birthDate;
-
-    @Column(name = "Nit", length = 20)
+    @Column(name = "Nit", length = 50)
     private String nit;
 
-    @Column(name = "Startdate")
-    private LocalDate startDate;
-
-    @Column(name = "Documenttype")
-    private Integer documentType;
+    @Column(name = "Status")
+    private Boolean status;
 
     @Column(name = "Phone", length = 15)
     private String phone;
@@ -50,4 +39,6 @@ public class Employee {
     @Column(name = "Address", length = 100)
     private String address;
 
+    @Column(name = "Typeid")
+    private Integer typeId;
 }

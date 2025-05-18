@@ -1,42 +1,37 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
-  FaArrowLeft, FaBirthdayCake, FaEnvelope, FaHome, FaIdCard,
-  FaPhone, FaRegCalendarAlt, FaSave, FaSearch,
-  FaTrash,
-  FaUser
+    FaArrowLeft, FaBirthdayCake, FaEnvelope, FaHome, FaIdCard,
+    FaPhone, FaRegCalendarAlt, FaSave, FaSearch,
+    FaTrash,
+    FaUser
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
-function EmployeePage() {
+function ThirdPartyPage() {
 
   const initialFormState = {
     id: '',
-    primerNombre: '',
-    segundoNombre: '',
-    primerApellido: '',
-    segundoApellido: '',
-    nombre: '',
-    estado: '',
-    fechaNacimiento: '',
     nit: '',
-    fechaInicio: '',
-    tipoDocumento: '',
-    telefono: '',
+    name: '',
+    status: '',
+    address: '',
+    phone: '',
     email: '',
-    direccion: '',
-    bancoId: '',
-    tipoCuenta: '',
-    numeroCuenta: ''
+    typeId: '',
+    accountNumber: '',
+    accountType: '',
+    bankId: ''
   };
 
   const [form, setForm] = useState(initialFormState);
 
   const API_URL = process.env.REACT_APP_API_URL;
-  const [empleadoEncontrado, setEmpleadoEncontrado] = useState(false);
+  const [terceroEncontrado, setTerceroEncontrado] = useState(false);
   const navigate = useNavigate();
 
   const [bancos, setBancos] = useState([]);
+  const [tipos, setTipos] = useState([]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -47,17 +42,27 @@ function EmployeePage() {
       const response = await fetch(`${API_URL}/banks`);
       const data = await response.json();
       setBancos(data);
-      console.log("📦 Bancos recibidos:", data);
     } catch (error) {
       console.error("Error al cargar bancos:", error);
     }
   }, [API_URL]);
 
+  const fetchTipos = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_URL}/types`);
+      const data = await response.json();
+      setTipos(data);
+    } catch (error) {
+      console.error("Error al cargar los tipos de tercero:", error);
+    }
+  }, [API_URL]);
+
   useEffect(() => {
     fetchBancos();
-  }, [API_URL, fetchBancos]);
+    fetchTipos();
+  }, [fetchBancos, fetchTipos]);
 
-  const buscarEmpleado = async () => {
+  const buscarTercero = async () => {
     try {
       const response = await fetch(`${API_URL}/employees/${form.nit}`);
 
@@ -77,7 +82,7 @@ function EmployeePage() {
     }
   };
 
-  const guardarEmpleado = async () => {
+  const guardarTercero = async () => {
 
     const esCampoInvalido = (campo) => {
       if (typeof campo === 'string') return campo.trim() === '';
@@ -164,7 +169,7 @@ function EmployeePage() {
     }
   };
 
-  const eliminarEmpleado = async () => {
+  const eliminarTercero = async () => {
     if (!form.id) {
       alert("No hay empleado cargado para eliminar.");
       return;
@@ -199,12 +204,12 @@ function EmployeePage() {
   return (
     <div className="App">
       <header className="header">
-        <h1>Gestión de Empleados</h1>
+        <h1>Gestión de Terceros</h1>
       </header>
       <main className="main-content">
         <div className="form-container">
           <div className="card">
-            <h2 className="form-title">Formulario de Empleado</h2>
+            <h2 className="form-title">Formulario de Terceros</h2>
 
             {/* NIT y Buscar */}
             <div className="form-row">
@@ -220,31 +225,35 @@ function EmployeePage() {
               </div>
               <div className="form-group">
                 <label>&nbsp;</label>
-                <button className="primary-button" onClick={buscarEmpleado}>
+                <button className="primary-button" onClick={buscarTercero}>
                   <FaSearch /> Buscar
                 </button>
               </div>
             </div>
 
-            {/* Primer y Segundo Nombre */}
+            {/* Nombre y estado */}
             <div className="form-row">
               <div className="form-group">
-                <label><FaUser /> Primer Nombre</label>
+                <label><FaUser /> Nombre del tercero </label>
                 <input
-                  name="primerNombre"
-                  value={form.primerNombre}
+                  name="name"
+                  value={form.name}
                   onChange={handleChange}
                   className="input-field"
                 />
               </div>
               <div className="form-group">
-                <label>Segundo Nombre</label>
-                <input
-                  name="segundoNombre"
-                  value={form.segundoNombre}
+                <label>Estado</label>
+                <select
+                  name="estado"
+                  value={form.estado}
                   onChange={handleChange}
                   className="input-field"
-                />
+                >
+                  <option value="">Seleccione</option>
+                  <option value="true">Activo</option>
+                  <option value="false">Inactivo</option>
+                </select>
               </div>
             </div>
 
@@ -427,4 +436,4 @@ function EmployeePage() {
   );
 }
 
-export default EmployeePage;
+export default ThirdPartyPage;

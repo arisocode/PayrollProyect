@@ -51,13 +51,12 @@ public class EmployeeMapper implements DataMapper<Employee, EmployeeDTO> {
         return employee;
     }
 
-    public static EmployeeDTO toDTOBank(EmployeeWithBank entity) {
+    //Metodo para comvertir de la vista al dto
+    public EmployeeDTO toDTOBank(EmployeeWithBank entity) {
+        if (entity == null) return null;
+
         EmployeeDTO dto = new EmployeeDTO();
         dto.setId(entity.getId());
-        dto.setFirstName(entity.getFirstName());
-        dto.setSecondName(entity.getSecondName());
-        dto.setFLastName(entity.getFLastName());
-        dto.setSLastName(entity.getSLastName());
         dto.setName(entity.getName());
         dto.setStatus(entity.getStatus());
         dto.setBirthDate(entity.getBirthDate());
@@ -70,7 +69,21 @@ public class EmployeeMapper implements DataMapper<Employee, EmployeeDTO> {
         dto.setBankId(entity.getBankId());
         dto.setAccountNumber(entity.getAccountNumber());
         dto.setAccountType(entity.getAccountType());
+
+        splitNameIntoParts(dto);
+
         return dto;
+    }
+
+    private void splitNameIntoParts(EmployeeDTO dto) {
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) return;
+
+        String[] parts = dto.getName().trim().split("\\s+");
+
+        dto.setFirstName(parts.length > 0 ? parts[0] : null);
+        dto.setSecondName(parts.length > 1 ? parts[1] : null);
+        dto.setFLastName(parts.length > 2 ? parts[2] : null);
+        dto.setSLastName(parts.length > 3 ? parts[3] : null);
     }
 
 }
