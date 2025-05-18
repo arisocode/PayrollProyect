@@ -53,4 +53,9 @@ public class EmployeeController {
         employeeService.deleteByNiT(nit);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping
+    public ResponseEntity<?> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.findAll());
+    }
 }

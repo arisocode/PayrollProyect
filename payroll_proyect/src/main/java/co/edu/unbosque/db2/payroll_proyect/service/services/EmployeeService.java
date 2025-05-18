@@ -1,8 +1,10 @@
 package co.edu.unbosque.db2.payroll_proyect.service.services;
 
 import java.sql.Types;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -12,9 +14,10 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 
-import co.edu.unbosque.db2.payroll_proyect.mapper.interfaces.DataMapper;
+import co.edu.unbosque.db2.payroll_proyect.mapper.EmployeeMapper;
 import co.edu.unbosque.db2.payroll_proyect.model.dto.EmployeeDTO;
-import co.edu.unbosque.db2.payroll_proyect.model.entity.Employee;
+import co.edu.unbosque.db2.payroll_proyect.model.entity.EmployeeWithBank;
+import co.edu.unbosque.db2.payroll_proyect.repository.IEmployeeBankRepository;
 import co.edu.unbosque.db2.payroll_proyect.repository.IEmployeeRepository;
 import co.edu.unbosque.db2.payroll_proyect.service.interfaces.IEmployeeService;
 
@@ -22,18 +25,22 @@ import co.edu.unbosque.db2.payroll_proyect.service.interfaces.IEmployeeService;
 @Service
 public class EmployeeService implements IEmployeeService {
 
+    private final IEmployeeBankRepository employeeBankRepository;
     private final IEmployeeRepository employeeRepository;
-    private final DataMapper<Employee, EmployeeDTO> employeeMapper;
+    private final EmployeeMapper employeeMapper;
     private final SimpleJdbcCall createEmployeeProcedure;
+    private final SimpleJdbcCall deleteEmployeeProcedure;
 
     @Autowired
-    public EmployeeService(IEmployeeRepository employeeRepository,
-                           DataMapper<Employee, EmployeeDTO> employeeMapper,
-                           DataSource dataSource) {
+    public EmployeeService(
+            IEmployeeBankRepository employeeBankRepository,
+            EmployeeMapper employeeMapper,
+            DataSource dataSource, IEmployeeRepository employeeRepository) {
+
+        this.employeeBankRepository = employeeBankRepository;
         this.employeeRepository = employeeRepository;
         this.employeeMapper = employeeMapper;
 
-        // Inicializar el SP con sus parámetros
         this.createEmployeeProcedure = new SimpleJdbcCall(dataSource)
                 .withProcedureName("SP_CreateEmployee")
                 .declareParameters(
@@ -41,6 +48,14 @@ public class EmployeeService implements IEmployeeService {
                         new SqlOutParameter("p_code", Types.INTEGER),
                         new SqlOutParameter("p_message", Types.VARCHAR)
                 );
+
+        this.deleteEmployeeProcedure = new SimpleJdbcCall(dataSource)
+            .withProcedureName("SP_DeleteEmployee")
+            .declareParameters(
+                    new SqlParameter("p_nit", Types.VARCHAR),
+                    new SqlOutParameter("p_code", Types.INTEGER),
+                    new SqlOutParameter("p_message", Types.VARCHAR)
+            );
     }
 
     @Override
@@ -101,14 +116,30 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public EmployeeDTO findByNit(String nit) {
-        Optional<Employee> employeeOpt = employeeRepository.findByNit(nit);
-        return employeeOpt.map(employeeMapper::toDTO).orElse(null);
+        Optional<EmployeeWithBank> employeeOpt = employeeBankRepository.findByNit(nit);
+        return employeeOpt.map(employeeMapper::toDTOBank).orElse(null);
     }
 
     @Override
     public void deleteByNiT(String nit) {
-        Optional<Employee> employeeOpt = employeeRepository.findByNit(nit);
-        employeeOpt.ifPresent(employeeRepository::delete);
+        Map<String, Object> result = deleteEmployeeProcedure.execute(Map.of("p_nit", nit));
+
+        Integer code = (Integer) result.get("p_code");
+        String message = (String) result.get("p_message");
+
+        System.out.println("Resultado SP - código: " + code + ", mensaje: " + message);
+
+        if (code != null && code != 0) {
+            throw new RuntimeException("Error al eliminar empleado: " + message);
+        }
+    }
+
+    @Override
+    public List<EmployeeDTO> findAll() {
+        return employeeRepository.findAll()
+                .stream()
+                .map(employeeMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
 }

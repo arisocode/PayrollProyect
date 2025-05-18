@@ -1,7 +1,5 @@
 package co.edu.unbosque.db2.payroll_proyect.model.entity;
 
-import java.time.LocalDate;
-
 import org.hibernate.annotations.Immutable;
 
 import jakarta.persistence.Column;
@@ -19,8 +17,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Immutable
-@Table(name = "v_employeeWithBank")
-public class EmployeeWithBank {
+@Table(name = "v_thirdpartybank")
+public class ThirdPartyBank {
 
     @Id
     @Column(name = "Id")
@@ -29,20 +27,11 @@ public class EmployeeWithBank {
     @Column(name = "Name")
     private String name;
 
-    @Column(name = "Status")
-    private Boolean status;
-
-    @Column(name = "BirthDate")
-    private LocalDate birthDate;
-
     @Column(name = "Nit")
     private String nit;
 
-    @Column(name = "StartDate")
-    private LocalDate startDate;
-
-    @Column(name = "DocumentType")
-    private Integer documentType;
+    @Column(name = "Status")
+    private Boolean status;
 
     @Column(name = "Phone")
     private String phone;
@@ -53,13 +42,15 @@ public class EmployeeWithBank {
     @Column(name = "Address")
     private String address;
 
-    @Column(name = "BankId")
+    @Column(name = "Typeid")
+    private Integer typeId;
+
+    @Column(name = "Bankid")
     private Integer bankId;
 
-    @Column(name = "AccountNumber")
+    @Column(name = "Accountnumber")
     private String accountNumber;
 
-    @Column(name = "AccountType")
+    @Column(name = "Accounttype")
     private Boolean accountType;
-
 }
