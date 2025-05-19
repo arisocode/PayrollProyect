@@ -203,9 +203,10 @@ function ThirdPartyPage() {
 
   return (
     <div className="App">
-      <header className="header">
-        <h1>Gestión de Terceros</h1>
-      </header>
+      <a href="/" className="header">
+        <img src="payroll.png" alt="Logo" className="logo" />
+        <h1 className="title">Poblado Nómina SAS</h1>
+      </a>
       <main className="main-content">
         <div className="form-container">
           <div className="card">

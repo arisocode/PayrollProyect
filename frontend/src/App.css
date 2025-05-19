@@ -3,7 +3,6 @@
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(to bottom right, #f0f4ff, #dfe9f3);
   color: #333;
 }
 
@@ -13,17 +12,26 @@ body {
   min-height: 100vh;
 }
 
-.header {
-  background: linear-gradient(to right, #0f62fe, #5ab2ff);
-  color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.logo {
+  height: auto;
+  width: 60px;
+  margin-left: 20px;
 }
 
-.logo {
-  height: 50px;
+.header {
+  text-decoration: none;
+  background-color: #5A5A5A;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  min-height: 60px;
+}
+
+.title {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .main-content {
@@ -42,8 +50,8 @@ body {
 
 .module-button {
   background: white;
-  border: 2px solid #0f62fe;
-  color: #0f62fe;
+  border: 2px solid #5A5A5A;
+  color: #5A5A5A;
   padding: 1rem;
   border-radius: 12px;
   font-weight: 600;
@@ -56,7 +64,7 @@ body {
 }
 
 .module-button:hover {
-  background: #0f62fe;
+  background: #5A5A5A;
   color: white;
 }
 
@@ -72,7 +80,7 @@ body {
 
 .employee-status h2 {
   margin-bottom: 1rem;
-  color: #0f62fe;
+  color: #5A5A5A;
 }
 
 .status {
@@ -113,7 +121,7 @@ body {
 .form-title {
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
-  color: #0f62fe;
+  color: #5A5A5A;
 }
 
 .form-row {
@@ -143,13 +151,13 @@ select {
 
 input:focus,
 select:focus {
-  border-color: #0f62fe;
+  border-color: #5A5A5A;
   outline: none;
 }
 
 button {
   padding: 1.2rem; /* Hicimos el botón un poco más grande */
-  background-color: #0f62fe;
+  background-color: #5A5A5A;
   color: white;
   border: none;
   border-radius: 8px;
@@ -160,7 +168,7 @@ button {
 }
 
 button:hover {
-  background-color: #0050c4;
+  background-color: #5A5A5A;
 }
 
 .form-actions {
@@ -173,4 +181,3 @@ button:hover {
   display: flex;
   gap: 1rem;
 }
-

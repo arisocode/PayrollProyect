@@ -43,10 +43,10 @@ function Home() {
 
   return (
     <div className="App">
-      <header className="header">
-        <h1>Empresa Nómina</h1>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo" className="logo" />
-      </header>
+      <a href="/" className="header">
+        <img src="payroll.png" alt="Logo" className="logo" />
+        <h1 className="title">Poblado Nómina SAS</h1>
+      </a>
       <main className="main-content">
         <section className="modules-section">
           {modules.map((mod, index) => (
