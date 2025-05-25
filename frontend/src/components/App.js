@@ -8,6 +8,7 @@ import EmpleadoPage from './EmployeePage';
 import { default as PositionPage, default as PositionPage2 } from './PositionPage';
 import SchedulePage from './SchedulePage';
 import ThirdPartyPage from './ThirdPartyPage';
+import FinalLiquidation from "./FinalLiquidation";
 
 const modules = [
   { name: 'Empleados', icon: <FaUserTie />, route: '/empleados' },
@@ -18,7 +19,7 @@ const modules = [
   { name: 'Cargos', icon: <FaUserTie />, route: '/cargos' },
   { name: 'Liquidación de Nómina', icon: <FaDollarSign /> },
   { name: 'Liquidación de Cesantías', icon: <FaMoneyCheckAlt /> },
-  { name: 'Liquidación Definitiva', icon: <FaMoneyCheckAlt /> },
+  { name: 'Liquidación Definitiva', icon: <FaMoneyCheckAlt />, route:'/liquidacionfinal' },
 ];
 
 function Home() {
@@ -88,6 +89,7 @@ function App() {
         <Route path="/tipos" element={<ContractTypePage />} />
         <Route path="/horarios" element={<SchedulePage />} />
         <Route path="/terceros" element={<ThirdPartyPage />} />
+        <Route path="/liquidacionfinal" element={<FinalLiquidation />} />
       </Routes>
     </Router>
   );
