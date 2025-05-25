@@ -3,7 +3,7 @@ import { FaArrowLeft, FaBuilding, FaHome, FaSave, FaSearch, FaTrash } from 'reac
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
-function PositionPage() {
+function  PositionPage() {
   const [form, setForm] = useState({
     id: '',
     code: '',
