@@ -207,93 +207,47 @@ function EmployeePage() {
           <div className="card">
             <h2 className="form-title">Formulario de Empleado</h2>
 
-            {/* NIT y Buscar */}
+            {/* NIT, Buscar y Estado */}
             <div className="form-row">
               <div className="form-group">
                 <label><FaIdCard /> NIT</label>
-                <input
-                  name="nit"
-                  value={form.nit}
-                  onChange={handleChange}
-                  placeholder="Ingrese NIT"
-                  className="input-field"
-                />
+                <input name="nit" value={form.nit} onChange={handleChange} placeholder="Ingrese NIT" className="input-field" />
               </div>
               <div className="form-group">
                 <label>&nbsp;</label>
-                <button className="primary-button" onClick={buscarEmpleado}>
+                <button className="button" onClick={buscarEmpleado}
+                  style={{ width: '250px' }}
+                >
                   <FaSearch /> Buscar
                 </button>
               </div>
             </div>
 
-            {/* Primer y Segundo Nombre */}
+            {/* Nombres y Apellidos */}
             <div className="form-row">
               <div className="form-group">
                 <label><FaUser /> Primer Nombre</label>
-                <input
-                  name="primerNombre"
-                  value={form.primerNombre}
-                  onChange={handleChange}
-                  className="input-field"
-                />
+                <input name="primerNombre" value={form.primerNombre} onChange={handleChange} className="input-field" />
               </div>
               <div className="form-group">
                 <label>Segundo Nombre</label>
-                <input
-                  name="segundoNombre"
-                  value={form.segundoNombre}
-                  onChange={handleChange}
-                  className="input-field"
-                />
+                <input name="segundoNombre" value={form.segundoNombre} onChange={handleChange} className="input-field" />
+              </div>
+              <div className="form-group">
+                <label><FaUser /> Primer Apellido</label>
+                <input name="primerApellido" value={form.primerApellido} onChange={handleChange} className="input-field" />
               </div>
             </div>
 
-            {/* Primer y Segundo Apellido */}
+            {/* Segundo Apellido, Tipo Documento y Fecha Nacimiento */}
             <div className="form-row">
-              <div className="form-group">
-                <label>Primer Apellido</label>
-                <input
-                  name="primerApellido"
-                  value={form.primerApellido}
-                  onChange={handleChange}
-                  className="input-field"
-                />
-              </div>
               <div className="form-group">
                 <label>Segundo Apellido</label>
-                <input
-                  name="segundoApellido"
-                  value={form.segundoApellido}
-                  onChange={handleChange}
-                  className="input-field"
-                />
-              </div>
-            </div>
-
-            {/* Estado y Tipo Documento */}
-            <div className="form-row">
-              <div className="form-group">
-                <label>Estado</label>
-                <select
-                  name="estado"
-                  value={form.estado}
-                  onChange={handleChange}
-                  className="input-field"
-                >
-                  <option value="">Seleccione</option>
-                  <option value="true">Activo</option>
-                  <option value="false">Inactivo</option>
-                </select>
+                <input name="segundoApellido" value={form.segundoApellido} onChange={handleChange} className="input-field" />
               </div>
               <div className="form-group">
                 <label><FaIdCard /> Tipo de Documento</label>
-                <select
-                  name="tipoDocumento"
-                  value={form.tipoDocumento}
-                  onChange={handleChange}
-                  className="input-field"
-                >
+                <select name="tipoDocumento" value={form.tipoDocumento} onChange={handleChange} className="input-field">
                   <option value="">Seleccione</option>
                   <option value="1">Cédula de Ciudadanía</option>
                   <option value="2">Cédula de Extranjería</option>
@@ -301,105 +255,72 @@ function EmployeePage() {
                   <option value="4">NIT</option>
                 </select>
               </div>
-            </div>
-
-            {/* Fecha Nacimiento y Fecha Inicio */}
-            <div className="form-row">
               <div className="form-group">
                 <label><FaBirthdayCake /> Fecha de Nacimiento</label>
-                <input
-                  type="date"
-                  name="fechaNacimiento"
-                  value={form.fechaNacimiento}
-                  onChange={handleChange}
-                  className="input-field"
-                />
-              </div>
-              <div className="form-group">
-                <label><FaRegCalendarAlt /> Fecha de Inicio</label>
-                <input
-                  type="date"
-                  name="fechaInicio"
-                  value={form.fechaInicio}
-                  onChange={handleChange}
-                  className="input-field"
-                />
+                <input type="date" name="fechaNacimiento" value={form.fechaNacimiento} onChange={handleChange} className="input-field" />
               </div>
             </div>
 
-            {/* Teléfono y Email */}
+            {/* Fecha Inicio, Teléfono, Email */}
             <div className="form-row">
               <div className="form-group">
+                <label><FaRegCalendarAlt /> Fecha de Inicio</label>
+                <input type="date" name="fechaInicio" value={form.fechaInicio} onChange={handleChange} className="input-field" />
+              </div>
+              <div className="form-group">
                 <label><FaPhone /> Teléfono</label>
-                <input
-                  name="telefono"
-                  value={form.telefono}
-                  onChange={handleChange}
-                  className="input-field"
-                />
+                <input name="telefono" value={form.telefono} onChange={handleChange} className="input-field" />
               </div>
               <div className="form-group">
                 <label><FaEnvelope /> Email</label>
-                <input
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  className="input-field"
-                />
+                <input name="email" value={form.email} onChange={handleChange} className="input-field" />
               </div>
             </div>
 
-            {/* Dirección y Banco */}
-            <div className="form-row">
-              <div className="form-group">
+            {/* Dirección, Banco, Tipo Cuenta */}
+            <div className="form-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
+              <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label><FaHome /> Dirección</label>
-                <input
-                  name="direccion"
-                  value={form.direccion}
-                  onChange={handleChange}
-                  className="input-field"
+                <input name="direccion" value={form.direccion} onChange={handleChange} className="input-field"
+                  style={{ width: '280px' }}
                 />
               </div>
-              <div className="form-group">
-              <label>Banco</label>
-              <select
-                name="bancoId"
-                value={form.bancoId}
-                onChange={handleChange}
-              >
-                <option value="">Seleccione</option>
-                {bancos.map(banco => (
-                  <option key={banco.id} value={banco.id}>
-                    {banco.name}
-                  </option>
-                ))}
-              </select>
+              <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
+                <label>Banco</label>
+                <select name="bancoId" value={form.bancoId} onChange={handleChange} className="input-field"
+                  style={{ width: '320px' }}
+                >
+                  <option value="">Seleccione</option>
+                  {bancos.map(banco => (
+                    <option key={banco.id} value={banco.id}>{banco.name}</option>
+                  ))}
+                </select>
               </div>
-            </div>
-            
-            {/* Tipo de Cuenta y Número de Cuenta */}
-            <div className="form-row">
-              <div className="form-group">
+              <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Tipo de Cuenta</label>
-                <select
-                  name="tipoCuenta"
-                  value={form.tipoCuenta}
-                  onChange={handleChange}
-                  className="input-field"
+                <select name="tipoCuenta" value={form.tipoCuenta} onChange={handleChange} className="input-field"
+                  style={{ width: '320px' }}
                 >
                   <option value="">Seleccione</option>
                   <option value="Ahorros">Ahorros</option>
                   <option value="Corriente">Corriente</option>
                 </select>
               </div>
+            </div>
+
+            {/* Número Cuenta solo */}
+            <div className="form-row">
               <div className="form-group">
                 <label>Número de Cuenta</label>
-                <input
-                  name="numeroCuenta"
-                  value={form.numeroCuenta}
-                  onChange={handleChange}
-                  className="input-field"
-                />
+                <input name="numeroCuenta" value={form.numeroCuenta} onChange={handleChange} className="input-field" />
+              </div>
+              <div className="form-group">
+                <label>Estado</label>
+                <select name="estado" value={form.estado} onChange={handleChange} className="input-field">
+                  <option value="">Seleccione</option>
+                  <option value="true">Activo</option>
+                  <option value="false">Inactivo</option>
+                </select>
               </div>
             </div>
 
@@ -408,7 +329,6 @@ function EmployeePage() {
               <button className="primary-button" onClick={guardarEmpleado}>
                 <FaSave /> Guardar Empleado
               </button>
-
               {empleadoEncontrado && (
                 <button className="danger-button" onClick={eliminarEmpleado}>
                   <FaTrash /> Eliminar Empleado

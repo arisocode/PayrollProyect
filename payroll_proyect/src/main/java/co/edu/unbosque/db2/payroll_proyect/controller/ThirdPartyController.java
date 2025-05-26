@@ -13,23 +13,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unbosque.db2.payroll_proyect.exception.ErrorResponse;
 import co.edu.unbosque.db2.payroll_proyect.exception.SuccessResponse;
-import co.edu.unbosque.db2.payroll_proyect.model.dto.EmployeeDTO;
-import co.edu.unbosque.db2.payroll_proyect.service.interfaces.IEmployeeService;
+import co.edu.unbosque.db2.payroll_proyect.model.dto.ThirdPartyDTO;
+import co.edu.unbosque.db2.payroll_proyect.service.interfaces.IThirdPartyService;
 
 @RestController
-@RequestMapping("/api/employees")
-public class EmployeeController {
+@RequestMapping("api/thirdparty")
+public class ThirdPartyController {
 
     @Autowired
-    //Llamo al servicio del empleado para las peticiones.
-    private IEmployeeService employeeService;
+    private IThirdPartyService thirdPartyService;
 
-    //Metood post para crear empleado
     @PostMapping
-    public ResponseEntity<?> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<?> createThirdParty(@RequestBody ThirdPartyDTO thirdPartyDTO) {
         try {
-            EmployeeDTO saved = employeeService.save(employeeDTO);
-            return ResponseEntity.ok(new SuccessResponse<>("Empleado creado exitosamente.", saved));
+            ThirdPartyDTO saved = thirdPartyService.save(thirdPartyDTO);
+            return ResponseEntity.ok(new SuccessResponse<>("Tercero creado exitosamente.", saved));
         } catch (RuntimeException ex) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -37,25 +35,23 @@ public class EmployeeController {
         }
     }
 
-    //metodo get para traer un empleado por Id
     @GetMapping("/{nit}")
-    public ResponseEntity<?> getEmployeeByNit(@PathVariable String nit) {
-        EmployeeDTO found = employeeService.findByNit(nit);
+    public ResponseEntity<?> getThirdPartyByNit(@PathVariable String nit) {
+        ThirdPartyDTO found = thirdPartyService.findByNit(nit);
         if (found == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Empleado no encontrado."));
         }
         return ResponseEntity.ok(found);
     }
 
-    //Metodo para eliminar al empleado
     @DeleteMapping("/{nit}")
-    public ResponseEntity<Void> deleteEmployeeByNit(@PathVariable String nit) {
-        employeeService.deleteByNiT(nit);
+    public ResponseEntity<Void> deleteThirdPartyByNit(@PathVariable String nit) {
+        thirdPartyService.deleteByNiT(nit);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllEmployees() {
-        return ResponseEntity.ok(employeeService.findAll());
+    public ResponseEntity<?> getAllThirdParty() {
+        return ResponseEntity.ok(thirdPartyService.findAll());
     }
 }
