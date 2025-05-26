@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
-    FaArrowLeft, FaBirthdayCake, FaEnvelope, FaHome, FaIdCard,
-    FaPhone, FaRegCalendarAlt, FaSave, FaSearch,
-    FaTrash,
-    FaUser
+  FaArrowLeft,
+  FaEnvelope, FaHome, FaIdCard,
+  FaPhone,
+  FaSave, FaSearch,
+  FaTrash,
+  FaUser
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
@@ -64,21 +66,21 @@ function ThirdPartyPage() {
 
   const buscarTercero = async () => {
     try {
-      const response = await fetch(`${API_URL}/employees/${form.nit}`);
+      const response = await fetch(`${API_URL}/thirdparty/${form.nit}`);
 
       if (!response.ok) {
         const errorData = await response.json();
-        setEmpleadoEncontrado(false);
+        setTerceroEncontrado(false);
         alert((errorData.message || "No se encontró el empleado") + " Cree uno nuevo.");
         return;
       }
   
       const data = await response.json();
       setForm(data);
-      setEmpleadoEncontrado(true);
+      setTerceroEncontrado(true);
     } catch (error) {
-      console.error("Error al buscar empleado:", error);
-      alert("Error al buscar empleado.");
+      console.error("Error al buscar tercero:", error);
+      alert("Error al buscar tercero.");
     }
   };
 
@@ -91,16 +93,13 @@ function ThirdPartyPage() {
     };
 
     const camposObligatorios = [
-      { campo: form.primerNombre, nombre: 'Primer Nombre' },
-      { campo: form.primerApellido, nombre: 'Primer Apellido' },
-      { campo: form.estado, nombre: 'Estado' },
-      { campo: form.fechaNacimiento, nombre: 'Fecha de Nacimiento' },
+      { campo: form.name, nombre: 'Nombre' },
       { campo: form.nit, nombre: 'NIT' },
-      { campo: form.fechaInicio, nombre: 'Fecha de Inicio' },
-      { campo: form.tipoDocumento, nombre: 'Tipo de Documento' },
-      { campo: form.bancoId, nombre: 'Banco' },
-      { campo: form.tipoCuenta, nombre: 'Tipo de Cuenta' },
-      { campo: form.numeroCuenta, nombre: 'Número de Cuenta' }
+      { campo: form.status, nombre: 'Estado' },
+      { campo: form.typeId, nombre: 'Tipo de tercero' },
+      { campo: form.bankId, nombre: 'Banco' },
+      { campo: form.accountType, nombre: 'Tipo de Cuenta' },
+      { campo: form.accountNumber, nombre: 'Número de Cuenta' }
     ];
   
     const camposFaltantes = camposObligatorios
@@ -113,11 +112,11 @@ function ThirdPartyPage() {
     }
 
     try {
-      const response = await fetch(`${API_URL}/employees/${form.nit}`);
+      const response = await fetch(`${API_URL}/thirdparty/${form.nit}`);
       if (response.ok) {
         const data = await response.json();
         if (data) {
-          alert(`Ya existe un empleado con el NIT ${form.nit}. No se puede guardar.`);
+          alert(`Ya existe un tercero con el NIT ${form.nit}. No se puede guardar.`);
           return;
         }
       }
@@ -126,74 +125,66 @@ function ThirdPartyPage() {
       alert("Error al verificar el NIT.");
       return;
     }
-  
-    // Concateno nombre completo
-    const nombreCompleto = [
-      form.primerNombre,
-      form.segundoNombre,
-      form.primerApellido,
-      form.segundoApellido
-    ].filter(Boolean).join(' ');
-  
+
     const payload = {
       ...form,
-      nombre: nombreCompleto,
       id: undefined,
-      estado: form.estado === 'true' || form.estado === true,
-      tipoDocumento: Number(form.tipoDocumento),
-      bancoId: Number(form.bancoId),
-      tipoCuenta: form.tipoCuenta === 'Ahorros',
+      status: form.status === 'true' || form.status === true,
+      typeId: Number(form.typeId),
+      bankId: Number(form.bankId),
+      accountType: form.accountType === 'Ahorros',
     };
 
     console.log("Payload enviado:", JSON.stringify(payload, null, 2));
 
     try {
-      const response = await fetch(`${API_URL}/employees`, {
+      const response = await fetch(`${API_URL}/thirdparty`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        alert("Error al guardar el empleado.");
+        alert("Error al guardar el tercero.");
         return;
       }
 
-      alert("Empleado guardado con éxito.");
+      alert("Tercero guardado con éxito.");
       setForm(initialFormState);
-      setEmpleadoEncontrado(true);
+      setTerceroEncontrado(true);
       fetchBancos()
+      fetchTipos()
     } catch (error) {
-      console.error("Error al guardar empleado:", error);
-      alert("Error al guardar empleado.");
+      console.error("Error al guardar tercero:", error);
+      alert("Error al guardar tercero.");
     }
   };
 
   const eliminarTercero = async () => {
     if (!form.id) {
-      alert("No hay empleado cargado para eliminar.");
+      alert("No hay tercero cargado para eliminar.");
       return;
     }
 
-    const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este empleado?");
+    const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este tercero?");
     if (!confirmacion) return;
 
     try {
-      const response = await fetch(`${API_URL}/employees/${form.nit}`, {
+      const response = await fetch(`${API_URL}/thirdparty/${form.nit}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
-        alert("Error al eliminar empleado.");
+        alert("Error al eliminar tercero.");
         return;
       }
 
-      alert("Empleado eliminado correctamente.");
+      alert("Tercero eliminado correctamente.");
       setForm(initialFormState);
-      setEmpleadoEncontrado(false);
+      setTerceroEncontrado(false);
     } catch (error) {
-      console.error("Error al eliminar empleado:", error);
-      alert("Error al eliminar empleado.");
+      console.error("Error al eliminar tercero:", error);
+      alert("Error al eliminar tercero.");
     }
   };
 
@@ -246,8 +237,8 @@ function ThirdPartyPage() {
               <div className="form-group">
                 <label>Estado</label>
                 <select
-                  name="estado"
-                  value={form.estado}
+                  name="status"
+                  value={form.status}
                   onChange={handleChange}
                   className="input-field"
                 >
@@ -255,84 +246,6 @@ function ThirdPartyPage() {
                   <option value="true">Activo</option>
                   <option value="false">Inactivo</option>
                 </select>
-              </div>
-            </div>
-
-            {/* Primer y Segundo Apellido */}
-            <div className="form-row">
-              <div className="form-group">
-                <label>Primer Apellido</label>
-                <input
-                  name="primerApellido"
-                  value={form.primerApellido}
-                  onChange={handleChange}
-                  className="input-field"
-                />
-              </div>
-              <div className="form-group">
-                <label>Segundo Apellido</label>
-                <input
-                  name="segundoApellido"
-                  value={form.segundoApellido}
-                  onChange={handleChange}
-                  className="input-field"
-                />
-              </div>
-            </div>
-
-            {/* Estado y Tipo Documento */}
-            <div className="form-row">
-              <div className="form-group">
-                <label>Estado</label>
-                <select
-                  name="estado"
-                  value={form.estado}
-                  onChange={handleChange}
-                  className="input-field"
-                >
-                  <option value="">Seleccione</option>
-                  <option value="true">Activo</option>
-                  <option value="false">Inactivo</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label><FaIdCard /> Tipo de Documento</label>
-                <select
-                  name="tipoDocumento"
-                  value={form.tipoDocumento}
-                  onChange={handleChange}
-                  className="input-field"
-                >
-                  <option value="">Seleccione</option>
-                  <option value="1">Cédula de Ciudadanía</option>
-                  <option value="2">Cédula de Extranjería</option>
-                  <option value="3">Pasaporte</option>
-                  <option value="4">NIT</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Fecha Nacimiento y Fecha Inicio */}
-            <div className="form-row">
-              <div className="form-group">
-                <label><FaBirthdayCake /> Fecha de Nacimiento</label>
-                <input
-                  type="date"
-                  name="fechaNacimiento"
-                  value={form.fechaNacimiento}
-                  onChange={handleChange}
-                  className="input-field"
-                />
-              </div>
-              <div className="form-group">
-                <label><FaRegCalendarAlt /> Fecha de Inicio</label>
-                <input
-                  type="date"
-                  name="fechaInicio"
-                  value={form.fechaInicio}
-                  onChange={handleChange}
-                  className="input-field"
-                />
               </div>
             </div>
 
@@ -341,8 +254,8 @@ function ThirdPartyPage() {
               <div className="form-group">
                 <label><FaPhone /> Teléfono</label>
                 <input
-                  name="telefono"
-                  value={form.telefono}
+                  name="phone"
+                  value={form.phone}
                   onChange={handleChange}
                   className="input-field"
                 />
@@ -358,41 +271,69 @@ function ThirdPartyPage() {
               </div>
             </div>
 
-            {/* Dirección y Banco */}
+            {/* Dirección y Tipo de terceros */}
             <div className="form-row">
               <div className="form-group">
                 <label><FaHome /> Dirección</label>
                 <input
-                  name="direccion"
-                  value={form.direccion}
+                  name="address"
+                  value={form.address}
                   onChange={handleChange}
                   className="input-field"
                 />
               </div>
               <div className="form-group">
-              <label>Banco</label>
-              <select
-                name="bancoId"
-                value={form.bancoId}
-                onChange={handleChange}
-              >
-                <option value="">Seleccione</option>
-                {bancos.map(banco => (
-                  <option key={banco.id} value={banco.id}>
-                    {banco.name}
-                  </option>
-                ))}
-              </select>
+                <label>Tipo de tercero</label>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <select
+                    name="typeId"
+                    value={form.typeId}
+                    onChange={handleChange}
+                    className="input-field"
+                    style={{ width: '200px' }}
+                >
+                    <option value="">Seleccione</option>
+                    {tipos.map(tt => (
+                    <option key={tt.id} value={tt.id}>
+                        {tt.name}
+                    </option>
+                    ))}
+                </select>
+                <button
+                    type="button"
+                    className="add-button"
+                    onClick={() => navigate('/tiposTerceros')}
+                    style={{ marginLeft: '10px', width: '90px' }}
+                >
+                    +
+                </button>
+                </div>
               </div>
             </div>
             
-            {/* Tipo de Cuenta y Número de Cuenta */}
+            {/* Banco y Tipo de cuenta */}
             <div className="form-row">
+              <div className="form-group">
+                <label>Banco</label>
+                <select
+                    name="bankId"
+                    value={form.bankId}
+                    onChange={handleChange}
+                    className="input-field"
+                >
+                    <option value="">Seleccione</option>
+                    {bancos.map(banco => (
+                    <option key={banco.id} value={banco.id}>
+                        {banco.name}
+                    </option>
+                    ))}
+                </select>
+              </div>
               <div className="form-group">
                 <label>Tipo de Cuenta</label>
                 <select
-                  name="tipoCuenta"
-                  value={form.tipoCuenta}
+                  name="accountType"
+                  value={form.accountType}
                   onChange={handleChange}
                   className="input-field"
                 >
@@ -401,11 +342,15 @@ function ThirdPartyPage() {
                   <option value="Corriente">Corriente</option>
                 </select>
               </div>
+            </div>
+
+            {/* Número de Cuenta */}
+            <div className="form-row">
               <div className="form-group">
                 <label>Número de Cuenta</label>
                 <input
-                  name="numeroCuenta"
-                  value={form.numeroCuenta}
+                  name="accountNumber"
+                  value={form.accountNumber}
                   onChange={handleChange}
                   className="input-field"
                 />
@@ -414,13 +359,13 @@ function ThirdPartyPage() {
 
             {/* Acciones */}
             <div className="form-actions">
-              <button className="primary-button" onClick={guardarEmpleado}>
-                <FaSave /> Guardar Empleado
+              <button className="primary-button" onClick={guardarTercero}>
+                <FaSave /> Guardar Tercero
               </button>
 
-              {empleadoEncontrado && (
-                <button className="danger-button" onClick={eliminarEmpleado}>
-                  <FaTrash /> Eliminar Empleado
+              {terceroEncontrado && (
+                <button className="danger-button" onClick={eliminarTercero}>
+                  <FaTrash /> Eliminar Tercero
                 </button>
               )}
             </div>

@@ -1,17 +1,14 @@
 package co.edu.unbosque.db2.payroll_proyect.model.dto;
 
-import co.edu.unbosque.db2.payroll_proyect.model.entity.Contract;
-import co.edu.unbosque.db2.payroll_proyect.model.entity.Employee;
-import co.edu.unbosque.db2.payroll_proyect.model.entity.Terminationreason;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Getter
 @Setter

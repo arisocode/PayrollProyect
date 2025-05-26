@@ -1,14 +1,12 @@
 package co.edu.unbosque.db2.payroll_proyect.exception;
 
-import co.edu.unbosque.db2.payroll_proyect.model.dto.EmployeeDTO;
-
-public class SuccessResponse {
+public class SuccessResponse<T> {
     private String message;
-    private EmployeeDTO employee;
+    private T data;
 
-    public SuccessResponse(String message, EmployeeDTO employee) {
+    public SuccessResponse(String message, T data) {
         this.message = message;
-        this.employee = employee;
+        this.data = data;
     }
 
     public String getMessage() {
@@ -19,13 +17,11 @@ public class SuccessResponse {
         this.message = message;
     }
 
-    public EmployeeDTO getEmployee() {
-        return employee;
+    public T getData() {
+        return data;
     }
 
-    public void setEmployee(EmployeeDTO employee) {
-        this.employee = employee;
+    public void setData(T data) {
+        this.data = data;
     }
-
-    
 }

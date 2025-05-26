@@ -24,7 +24,7 @@ function ContractPage() {
     employeeId: '',
     scheduleId: '',
     jobPositionId: '',
-    contractId: ''
+    thirdParties: []
   };
 
   const [form, setForm] = useState(initialFormState);
@@ -37,6 +37,11 @@ function ContractPage() {
   const [schedules, setSchedules] = useState([]);
   const [jobPositions, setJobPositions] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [terceros, setTerceros] = useState([]);
+  const [tercerosAsociados, setTercerosAsociados] = useState([]);
+  const [selectedThirdPartyId, setSelectedThirdPartyId] = useState('');
+  const [thirdPartyPercentage, setThirdPartyPercentage] = useState('');
+  const [contratoOriginal, setContratoOriginal] = useState(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -49,6 +54,16 @@ function ContractPage() {
         setContractTypes(data);
     } catch (err) {
         console.error('Error al cargar tipos de contrato:', err);
+    }
+  }, [API_URL]);
+
+  const fetchTerceros = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_URL}/thirdparty`);
+      const data = await res.json();
+      setTerceros(data);
+    } catch (err) {
+      console.error('Error al cargar terceros:', err);
     }
   }, [API_URL]);
 
@@ -87,145 +102,249 @@ function ContractPage() {
     fetchSchedules();
     fetchJobPositions();
     fetchEmployees();
-  }, [fetchContractTypes, fetchSchedules, fetchJobPositions, fetchEmployees]);
+    fetchTerceros();
+  }, [fetchContractTypes, fetchSchedules, fetchJobPositions, fetchEmployees, fetchTerceros]);
 
-   const buscarContrato = async () => {
-   };
-//     try {
-//       const response = await fetch(`${API_URL}/employees/${form.nit}`);
+  const addThirdParty = () => {
+    if (!selectedThirdPartyId || !thirdPartyPercentage) return;
 
-//       if (!response.ok) {
-//         const errorData = await response.json();
-//         setEmpleadoEncontrado(false);
-//         alert((errorData.message || "No se encontró el empleado") + " Cree uno nuevo.");
-//         return;
-//       }
-  
-//       const data = await response.json();
-//       setForm(data);
-//       setEmpleadoEncontrado(true);
-//     } catch (error) {
-//       console.error("Error al buscar empleado:", error);
-//       alert("Error al buscar empleado.");
-//     }
-//   };
+    const exists = form.thirdParties.find(tp => tp.nit === selectedThirdPartyId);
+    if (exists) {
+      alert('Este tercero ya fue agregado');
+      return;
+    }
 
-   const guardarContrato = async () => {
-   };
+    const nuevoTercero = {
+      nit: selectedThirdPartyId,
+      percentage: parseFloat(thirdPartyPercentage)
+    };
 
-//     const esCampoInvalido = (campo) => {
-//       if (typeof campo === 'string') return campo.trim() === '';
-//       if (typeof campo === 'number') return isNaN(campo);
-//       return campo === null || campo === undefined;
-//     };
+    setForm(prev => ({
+      ...prev,
+      thirdParties: [...prev.thirdParties, nuevoTercero]
+    }));
 
-//     const camposObligatorios = [
-//       { campo: form.primerNombre, nombre: 'Primer Nombre' },
-//       { campo: form.primerApellido, nombre: 'Primer Apellido' },
-//       { campo: form.estado, nombre: 'Estado' },
-//       { campo: form.fechaNacimiento, nombre: 'Fecha de Nacimiento' },
-//       { campo: form.nit, nombre: 'NIT' },
-//       { campo: form.fechaInicio, nombre: 'Fecha de Inicio' },
-//       { campo: form.tipoDocumento, nombre: 'Tipo de Documento' },
-//       { campo: form.bancoId, nombre: 'Banco' },
-//       { campo: form.tipoCuenta, nombre: 'Tipo de Cuenta' },
-//       { campo: form.numeroCuenta, nombre: 'Número de Cuenta' }
-//     ];
-  
-//     const camposFaltantes = camposObligatorios
-//       .filter(c => esCampoInvalido(c.campo))
-//       .map(c => c.nombre);
+    setSelectedThirdPartyId('');
+    setThirdPartyPercentage('');
+  };
 
-//     if (camposFaltantes.length > 0) {
-//       alert(`Los siguientes campos son obligatorios:\n\n${camposFaltantes.join('\n')}`);
-//       return;
-//     }
+  const deleteThirdParty = (nit) => {
+    setForm(prev => ({
+      ...prev,
+      thirdParties: prev.thirdParties.filter(tp => tp.nit !== nit)
+    }));
+  };
 
-//     try {
-//       const response = await fetch(`${API_URL}/employees/${form.nit}`);
-//       if (response.ok) {
-//         const data = await response.json();
-//         if (data) {
-//           alert(`Ya existe un empleado con el NIT ${form.nit}. No se puede guardar.`);
-//           return;
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Error al verificar NIT:", error);
-//       alert("Error al verificar el NIT.");
-//       return;
-//     }
-  
-//     // Concateno nombre completo
-//     const nombreCompleto = [
-//       form.primerNombre,
-//       form.segundoNombre,
-//       form.primerApellido,
-//       form.segundoApellido
-//     ].filter(Boolean).join(' ');
-  
-//     const payload = {
-//       ...form,
-//       nombre: nombreCompleto,
-//       id: undefined,
-//       estado: form.estado === 'true' || form.estado === true,
-//       tipoDocumento: Number(form.tipoDocumento),
-//       bancoId: Number(form.bancoId),
-//       tipoCuenta: form.tipoCuenta === 'Ahorros',
-//     };
+  const buscarContrato = async () => {
+    if (!form.code || form.code.trim() === '') {
+      alert("Ingrese el código del contrato para buscar.");
+      return;
+    }
 
-//     console.log("Payload enviado:", JSON.stringify(payload, null, 2));
+    try {
+      const response = await fetch(`${API_URL}/contracts/${form.code}`);
 
-//     try {
-//       const response = await fetch(`${API_URL}/employees`, {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify(payload),
-//       });
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.message || "Contrato no encontrado");
+        setContratoEncontrado(false);
+        return;
+      }
 
-//       if (!response.ok) {
-//         alert("Error al guardar el empleado.");
-//         return;
-//       }
+      const data = await response.json();
 
-//       alert("Empleado guardado con éxito.");
-//       setForm(initialFormState);
-//       setEmpleadoEncontrado(true);
-//       fetchBancos()
-//     } catch (error) {
-//       console.error("Error al guardar empleado:", error);
-//       alert("Error al guardar empleado.");
-//     }
-//   };
+      setForm({
+        ...initialFormState,
+        ...data,
+        startDate: data.startDate ? data.startDate.split("T")[0] : '',
+        endDate: data.endDate ? data.endDate.split("T")[0] : '',
+        modificationDate: data.modificationDate ? data.modificationDate.split("T")[0] : '',
+        thirdParties: data.thirdParties || [],
+        contractTypeId: String(data.contractTypeId),
+        scheduleId: String(data.scheduleId),
+        jobPositionId: String(data.jobPositionId),
+        employeeId: String(data.employeeId),
+        status: String(data.status),
+        paymentPeriod: String(data.paymentPeriod),
+        paymentHour: String(data.paymentHour),
+        salary: String(data.salary),
+      });
 
-   const otroSiContrato = async () => {
-   };
-//     if (!form.id) {
-//       alert("No hay empleado cargado para eliminar.");
-//       return;
-//     }
+      setContratoOriginal({
+        ...data,
+        startDate: data.startDate ? data.startDate.split("T")[0] : '',
+        endDate: data.endDate ? data.endDate.split("T")[0] : '',
+        modificationDate: data.modificationDate ? data.modificationDate.split("T")[0] : '',
+        thirdParties: data.thirdParties || [],
+        contractTypeId: String(data.contractTypeId),
+        scheduleId: String(data.scheduleId),
+        jobPositionId: String(data.jobPositionId),
+        employeeId: String(data.employeeId),
+        status: String(data.status),
+        paymentPeriod: String(data.paymentPeriod),
+        paymentHour: String(data.paymentHour),
+        salary: String(data.salary),
+      });
 
-//     const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este empleado?");
-//     if (!confirmacion) return;
+      setContratoEncontrado(true);
+    } catch (error) {
+      console.error("Error al buscar contrato:", error);
+      alert("Error al buscar contrato.");
+      setContratoEncontrado(false);
+    }
+  };
 
-//     try {
-//       const response = await fetch(`${API_URL}/employees/${form.nit}`, {
-//         method: 'DELETE',
-//       });
+  const guardarContrato = async () => {
+    const camposObligatorios = [
+      { campo: form.code, nombre: 'Código del contrato' },
+      { campo: form.contractTypeId, nombre: 'Tipo de contrato' },
+      { campo: form.startDate, nombre: 'Fecha de inicio' },
+      { campo: form.status, nombre: 'Estado' },
+      { campo: form.paymentPeriod, nombre: 'Periodo de pago' },
+      { campo: form.paymentHour, nombre: 'Pago por hora' },
+      { campo: form.employeeId, nombre: 'Empleado' },
+      { campo: form.scheduleId, nombre: 'Horario' },
+      { campo: form.jobPositionId, nombre: 'Cargo' },
+    ];
 
-//       if (!response.ok) {
-//         alert("Error al eliminar empleado.");
-//         return;
-//       }
+    const esCampoInvalido = (campo) => {
+      if (typeof campo === 'string') return campo.trim() === '';
+      if (typeof campo === 'number') return isNaN(campo);
+      return campo === null || campo === undefined;
+    };
 
-//       alert("Empleado eliminado correctamente.");
-//       setForm(initialFormState);
-//       setEmpleadoEncontrado(false);
-//     } catch (error) {
-//       console.error("Error al eliminar empleado:", error);
-//       alert("Error al eliminar empleado.");
-//     }
-//   };
+    let camposFaltantes = camposObligatorios
+      .filter(c => esCampoInvalido(c.campo))
+      .map(c => c.nombre);
+
+    if (form.thirdParties.length === 0) {
+      camposFaltantes.push('Terceros asociados');
+    }
+
+    if (camposFaltantes.length > 0) {
+      alert(`Los siguientes campos son obligatorios:\n\n${camposFaltantes.join('\n')}`);
+      return;
+    }
+
+    const cleanDate = (dateStr) => {
+      return dateStr ? dateStr.split("T")[0] : null;
+    };
+
+    const payload = {
+      ...form,
+      startDate: cleanDate(form.startDate),
+      endDate: cleanDate(form.endDate),
+      modificationDate: cleanDate(form.modificationDate),
+      salary: form.salary?.trim() === "" ? 0.0 : parseFloat(form.salary || 0.0),
+      contractTypeId: Number(form.contractTypeId),
+      scheduleId: Number(form.scheduleId),
+      jobPositionId: Number(form.jobPositionId),
+      employeeId: Number(form.employeeId),
+      status: Number(form.status),
+      paymentPeriod: Number(form.paymentPeriod),
+      paymentHour: parseFloat(form.paymentHour),
+      thirdParties: form.thirdParties.map(tp => ({
+        nit: tp.nit,
+        percentage: parseFloat(tp.percentage)
+      }))
+    };
+
+    console.log('Contrato a enviar:', JSON.stringify(payload, null, 2));
+
+    try {
+      const response = await fetch(`${API_URL}/contracts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error al guardar contrato:", errorData);
+        alert(`Error al guardar contrato: ${errorData.message || 'Error desconocido'}`);
+        return;
+      }
+
+      alert('Contrato guardado con éxito.');
+      setForm(initialFormState);
+      setContratoEncontrado(true);
+    } catch (error) {
+      console.error("Error al guardar contrato:", error);
+      alert("Error al guardar contrato.");
+    }
+  };
+
+  const otroSiContrato = async () => {
+    if (!contratoOriginal) {
+    alert("No hay contrato original para comparar.");
+    return;
+    }
+
+    const haCambiado = (
+      contratoOriginal.salary !== form.salary ||
+      contratoOriginal.startDate !== form.startDate ||
+      contratoOriginal.endDate !== form.endDate ||
+      contratoOriginal.contractTypeId !== form.contractTypeId ||
+      contratoOriginal.scheduleId !== form.scheduleId ||
+      contratoOriginal.jobPositionId !== form.jobPositionId ||
+      contratoOriginal.employeeId !== form.employeeId ||
+      contratoOriginal.status !== form.status ||
+      contratoOriginal.paymentPeriod !== form.paymentPeriod ||
+      contratoOriginal.paymentHour !== form.paymentHour ||
+      JSON.stringify(contratoOriginal.thirdParties) !== JSON.stringify(form.thirdParties)
+    );
+
+    if (!haCambiado) {
+      alert("No se han realizado modificaciones al contrato.");
+      return;
+    }
+
+    const cleanDate = (dateStr) => {
+      return dateStr ? dateStr.split("T")[0] : null;
+    };
+
+    const payload = {
+      ...form,
+      startDate: cleanDate(form.startDate),
+      endDate: cleanDate(form.endDate),
+      modificationDate: new Date().toISOString().split('T')[0],
+      salary: form.salary?.trim() === "" ? 0.0 : parseFloat(form.salary || 0.0),
+      contractTypeId: Number(form.contractTypeId),
+      scheduleId: Number(form.scheduleId),
+      jobPositionId: Number(form.jobPositionId),
+      employeeId: Number(form.employeeId),
+      status: Number(form.status),
+      paymentPeriod: Number(form.paymentPeriod),
+      paymentHour: parseFloat(form.paymentHour),
+      thirdParties: form.thirdParties.map(tp => ({
+        nit: tp.nit,
+        percentage: parseFloat(tp.percentage)
+      }))
+    };
+
+    console.log('Contrato modificado (OtroSí):', JSON.stringify(payload, null, 2));
+
+    try {
+      const response = await fetch(`${API_URL}/contracts/otrosi`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error al aplicar OtroSí: ${errorData.message || 'Error desconocido'}`);
+        return;
+      }
+
+      alert("Modificación del contrato registrada con éxito (OtroSí).");
+      setContratoOriginal(payload);
+      setContratoEncontrado(true);
+    } catch (error) {
+      console.error("Error en OtroSí:", error);
+      alert("Error al aplicar OtroSí.");
+    }
+  };
 
   const volverAlMenu = () => {
     navigate('/');
@@ -233,18 +352,27 @@ function ContractPage() {
 
   return (
     <div className="App">
-      <a href="/" className="header">
-        <img src="payroll.png" alt="Logo" className="logo" />
-        <h1 className="title">Poblado Nómina SAS</h1>
+      <a href="/" className="header" style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', textDecoration: 'none', color: 'inherit' }}>
+        <img src="payroll.png" alt="Logo" className="logo" style={{ height: '50px', marginRight: '15px' }} />
+        <h1 className="title" style={{ fontSize: '2rem', fontWeight: 'bold' }}>Poblado Nómina SAS</h1>
       </a>
-      <main className="main-content">
-        <div className="form-container">
-          <div className="card">
-            <h2 className="form-title">Formulario de Contratos</h2>
 
-            {/* Codigo y Buscar */}
-            <div className="form-row">
-              <div className="form-group">
+      <main className="main-content" style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
+        
+        {/* Contenedor Formulario */}
+        <div className="form-container" style={{
+          borderRadius: '8px',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+          padding: '25px',
+          flex: '1 1 600px',
+          minWidth: '320px'
+        }}>
+          
+          <h2 style={{ marginBottom: '20px', fontWeight: '600', fontSize: '1.5rem' }}>Formulario de Contratos</h2>
+          
+          {/* Codigo y Buscar */}
+            <div className="form-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
+              <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label><FaIdCard /> Codigo</label>
                 <input
                   name="code"
@@ -254,18 +382,20 @@ function ContractPage() {
                   className="input-field"
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>&nbsp;</label>
-                <button className="primary-button" onClick={buscarContrato}>
+                <button className="primary-button" onClick={buscarContrato}
+                  style={{ marginLeft: '200px', width: '250px'}}
+                >
                   <FaSearch /> Buscar
                 </button>
               </div>
             </div>
 
-            {/* Tipo de Contrato, Horario y Cargo */}
-            <div className="form-row">
+          {/* Tipo de Contrato, Horario y Cargo */}
+            <div className="form-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
             {/* Tipo de Contrato */}
-            <div className="form-group">
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Tipo de Contrato</label>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                 <select
@@ -286,15 +416,15 @@ function ContractPage() {
                     type="button"
                     className="add-button"
                     onClick={() => navigate('/tipos')}
-                    style={{ marginLeft: '10px', width: '90px' }}
+                    style={{ marginLeft: '10px', width: '80px' }}
                 >
                     +
                 </button>
                 </div>
             </div>
 
-            {/* Horario */}
-            <div className="form-group">
+          {/* Horario */}
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Horario</label>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                 <select
@@ -315,15 +445,15 @@ function ContractPage() {
                     type="button"
                     className="add-button"
                     onClick={() => navigate('/Horarios')}
-                    style={{ marginLeft: '10px', width: '90px' }}
+                    style={{ marginLeft: '10px', width: '80px' }}
                 >
                     +
                 </button>
                 </div>
             </div>
 
-            {/* Cargo */}
-            <div className="form-group">
+          {/* Cargo */}
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Cargo</label>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                 <select
@@ -344,7 +474,7 @@ function ContractPage() {
                     type="button"
                     className="add-button"
                     onClick={() => navigate('/cargoss')}
-                    style={{ marginLeft: '10px', width: '90px' }}
+                    style={{ marginLeft: '10px', width: '80px' }}
                 >
                     +
                 </button>
@@ -352,9 +482,9 @@ function ContractPage() {
             </div>
             </div>
 
-            {/* Empleado */}
-            <div className="form-row">
-            <div className="form-group">
+          {/* Empleado */}
+            <div className="form-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Empleado</label>
                 <select
                 name="employeeId"
@@ -372,9 +502,9 @@ function ContractPage() {
             </div>
             </div>
 
-            {/* Fechas y Salario */}
-            <div className="form-row">
-            <div className="form-group">
+          {/* Fechas y Salario */}
+            <div className="form-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Fecha de Inicio</label>
                 <input
                 type="date"
@@ -382,9 +512,10 @@ function ContractPage() {
                 value={form.startDate}
                 onChange={handleChange}
                 className="input-field"
+                style={{ width: '265px' }}
                 />
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Fecha de Fin</label>
                 <input
                 type="date"
@@ -392,9 +523,10 @@ function ContractPage() {
                 value={form.endDate}
                 onChange={handleChange}
                 className="input-field"
+                style={{ width: '265px' }}
                 />
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Salario</label>
                 <input
                 type="number"
@@ -404,13 +536,14 @@ function ContractPage() {
                 className="input-field"
                 step="0.01"
                 placeholder="0.00"
+                style={{ width: '263px' }}
                 />
             </div>
             </div>
 
-            {/*estado, periodo de pago y pago por hora */}
-            <div className="form-row">
-            <div className="form-group">
+          {/*estado, periodo de pago y pago por hora */}
+            <div className="form-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Estado</label>
                 <select
                 name="status"
@@ -424,7 +557,7 @@ function ContractPage() {
                 <option value="3">Liquidado</option>
                 </select>
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Periodo de Pago</label>
                 <select
                 name="paymentPeriod"
@@ -437,7 +570,7 @@ function ContractPage() {
                 <option value="2">Quincenal</option>
                 </select>
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{ flex: '1 1 250px', display: 'flex', flexDirection: 'column' }}>
                 <label>Pago por Hora</label>
                 <input
                 type="number"
@@ -447,30 +580,183 @@ function ContractPage() {
                 className="input-field"
                 step="0.01"
                 placeholder="0.00"
+                style={{ width: '263px' }}
                 />
             </div>
             </div>
 
-            {/* Acciones */}
-            <div className="form-actions">
-              <button className="primary-button" onClick={guardarContrato}>
-                <FaSave /> Guardar Contrato
-              </button>
+          {/* Acciones */}
+            <div className="form-actions" style={{ marginTop: '25px', display: 'flex', gap: '15px' }}>
+              {!contratoEncontrado && (
+                <button
+                  className="primary-button"
+                  onClick={guardarContrato}
+                  style={{
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <FaSave /> Guardar Contrato
+                </button>
+              )}
 
               {contratoEncontrado && (
-                <button className="danger-button" onClick={otroSiContrato}>
-                  <FaTrash /> OtroSi
+                <button
+                  className="danger-button"
+                  onClick={otroSiContrato}
+                  style={{
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <FaTrash /> OtroSí
                 </button>
               )}
             </div>
 
             <div className="form-actions" style={{ marginTop: '20px' }}>
-              <button className="secondary-button" onClick={volverAlMenu}>
+              <button
+                className="secondary-button"
+                onClick={volverAlMenu}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
                 <FaArrowLeft /> Volver al Menú
               </button>
             </div>
           </div>
-        </div>
+
+        {/* Contenedor Tabla Terceros */}
+        <aside className="terceros-container" style={{
+          background: 'rgba(30, 30, 45, 0.6)',
+          borderRadius: '8px',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+          padding: '20px',
+          width: '350px',
+          maxHeight: '600px',
+          overflowY: 'auto'
+        }}>
+          <h3 style={{ marginBottom: '15px', fontWeight: '600', fontSize: '1.25rem' }}>Terceros Asociados</h3>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <label style={{ fontWeight: '500' }}>Tercero</label>
+              <select
+                value={selectedThirdPartyId}
+                onChange={e => setSelectedThirdPartyId(e.target.value)}
+                className="input-field"
+                style={{
+                  padding: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #ccc',
+                  width: '100%'
+                }}
+              >
+                <option value="">Seleccione</option>
+                {terceros.map(tp => (
+                  <option key={tp.nit} value={tp.nit}>
+                    {tp.name}
+                  </option>
+                ))}
+              </select>
+
+              {/* Porcentaje + Botón en una línea */}
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <input
+                  type="number"
+                  placeholder="%"
+                  value={thirdPartyPercentage}
+                  onChange={e => setThirdPartyPercentage(e.target.value)}
+                  className="input-field"
+                  style={{
+                    flex: 1,
+                    padding: '8px',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={addThirdParty}
+                  style={{
+                    padding: '8px 12px',
+                    border: 'none',
+                    borderRadius: '4px',
+                    backgroundColor: '#4CAF50',
+                    color: 'white',
+                    cursor: 'pointer',
+                    width: '100px'
+                  }}
+                >
+                  Agregar
+                </button>
+              </div>
+            </div>
+
+          <table style={{ marginTop: '12px', width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ backgroundColor: 'Black' }}>
+                <th style={{ padding: '8px', borderBottom: '1px solid #ccc', textAlign: 'left' }}>Tercero</th>
+                <th style={{ padding: '8px', borderBottom: '1px solid #ccc', textAlign: 'left' }}>Porcentaje</th>
+              </tr>
+            </thead>
+            <tbody>
+              {form.thirdParties.length === 0 ? (
+                <tr>
+                  <td colSpan="3" style={{ textAlign: 'center', padding: '20px', color: '#6b7280' }}>
+                    Sin terceros asociados
+                  </td>
+                </tr>
+              ) : (
+                form.thirdParties.map((tp) => {
+                  const terceroInfo = terceros.find(t => t.nit === tp.nit);
+                  return (
+                    <tr key={tp.nit} style={{ borderBottom: '1px solid #eee' }}>
+                      <td style={{ padding: '8px' }}>{terceroInfo ? terceroInfo.nit : 'Tercero desconocido'}</td>
+                      <td style={{ padding: '8px' }}>{tp.percentage}%</td>
+                      <td style={{ padding: '8px', textAlign: 'center' }}>
+                        <button
+                          onClick={() => deleteThirdParty(tp.nit)}
+                          style={{
+                            backgroundColor: '#ef4444',
+                            color: 'white',
+                            border: 'none',
+                            padding: '5px 10px',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            justifyContent: 'center'
+                          }}
+                          title="Quitar tercero"
+                        >
+                          <FaTrash /> Quitar
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </aside>
       </main>
     </div>
   );

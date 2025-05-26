@@ -5,17 +5,20 @@ import BankPage from './BankPage';
 import ContractPage from './ContractPage';
 import ContractTypePage from './ContractTypePage';
 import EmpleadoPage from './EmployeePage';
+import FinalLiquidation from "./FinalLiquidation";
+import NoveltyPage from './NoveltyPage';
+import NoveltyTypePage from './NoveltyTypePage';
+import PartyTypePage from './PartyTypePage';
 import { default as PositionPage, default as PositionPage2 } from './PositionPage';
 import SchedulePage from './SchedulePage';
 import ThirdPartyPage from './ThirdPartyPage';
-import FinalLiquidation from "./FinalLiquidation";
 
 const modules = [
   { name: 'Empleados', icon: <FaUserTie />, route: '/empleados' },
   { name: 'Terceros', icon: <FaUsers />, route: '/terceros' },
   { name: 'Contratos', icon: <FaFileContract />, route: '/contratos' },
   { name: 'Bancos', icon: <FaBuilding />, route: '/bancos' },
-  { name: 'Novedades', icon: <FaClock /> },
+  { name: 'Novedades', icon: <FaClock />, route: '/novedades' },
   { name: 'Cargos', icon: <FaUserTie />, route: '/cargos' },
   { name: 'Liquidación de Nómina', icon: <FaDollarSign /> },
   { name: 'Liquidación de Cesantías', icon: <FaMoneyCheckAlt /> },
@@ -90,6 +93,9 @@ function App() {
         <Route path="/horarios" element={<SchedulePage />} />
         <Route path="/terceros" element={<ThirdPartyPage />} />
         <Route path="/liquidacionfinal" element={<FinalLiquidation />} />
+        <Route path="/tiposTerceros" element={<PartyTypePage />} />
+        <Route path="/novedades" element={<NoveltyPage />} />
+        <Route path="/typesNovelty" element={<NoveltyTypePage />} />
       </Routes>
     </Router>
   );

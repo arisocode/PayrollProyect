@@ -69,7 +69,7 @@ public class EmployeeService implements IEmployeeService {
     System.out.println("Resultado SP - código: " + code + ", mensaje: " + message);
 
     if (code != null && code == 0) {
-        return dto; // Puedes devolver el dto o volver a buscarlo en DB para mayor precisión
+        return dto;
     } else {
         throw new RuntimeException("Error al crear empleado: " + message);
     }
