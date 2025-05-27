@@ -9,6 +9,8 @@ import FinalLiquidation from "./FinalLiquidation";
 import NoveltyPage from './NoveltyPage';
 import NoveltyTypePage from './NoveltyTypePage';
 import PartyTypePage from './PartyTypePage';
+import PayrollLiquidationDetails from './PayrollLiquidationDetails';
+import PayrollLiquidationPage from './PayrollLiquidationPage';
 import { default as PositionPage, default as PositionPage2 } from './PositionPage';
 import SchedulePage from './SchedulePage';
 import ThirdPartyPage from './ThirdPartyPage';
@@ -20,7 +22,7 @@ const modules = [
   { name: 'Bancos', icon: <FaBuilding />, route: '/bancos' },
   { name: 'Novedades', icon: <FaClock />, route: '/novedades' },
   { name: 'Cargos', icon: <FaUserTie />, route: '/cargos' },
-  { name: 'Liquidación de Nómina', icon: <FaDollarSign /> },
+  { name: 'Liquidación de Nómina', icon: <FaDollarSign />, route: '/liquidacionNomina' },
   { name: 'Liquidación de Cesantías', icon: <FaMoneyCheckAlt /> },
   { name: 'Liquidación Definitiva', icon: <FaMoneyCheckAlt />, route:'/liquidacionfinal' },
 ];
@@ -61,9 +63,8 @@ function Home() {
           ))}
         </section>
         <section className="employee-status">
-          <h2 className="section-title">
-            Estado de Empleados <span className="date">({today})</span>
-          </h2>
+          <h2 className="section-title">Estado de Empleados</h2>
+          <p className="date">({today})</p>
           <div className="scrollable-list">
             <ul>
               {employeeStatus.map((emp, idx) => (
@@ -96,6 +97,8 @@ function App() {
         <Route path="/tiposTerceros" element={<PartyTypePage />} />
         <Route path="/novedades" element={<NoveltyPage />} />
         <Route path="/typesNovelty" element={<NoveltyTypePage />} />
+        <Route path="/liquidacionNomina" element={<PayrollLiquidationPage />} />
+        <Route path="/payroll/details/:empleadoId" element={<PayrollLiquidationDetails />} />
       </Routes>
     </Router>
   );

@@ -16,6 +16,7 @@ import co.edu.unbosque.db2.payroll_proyect.exception.SuccessResponse;
 import co.edu.unbosque.db2.payroll_proyect.model.dto.EmployeeDTO;
 import co.edu.unbosque.db2.payroll_proyect.service.interfaces.IEmployeeService;
 
+
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
@@ -54,6 +55,15 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/to-liquidate")
+    public ResponseEntity<?> getEmployeeToBeLiquidated() {
+        try {
+            return ResponseEntity.ok(employeeService.getEmployeesToLiquidate());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("Error al buscar empleados a liquidar."));
+        }
+    }
+    
     @GetMapping
     public ResponseEntity<?> getAllEmployees() {
         return ResponseEntity.ok(employeeService.findAll());
