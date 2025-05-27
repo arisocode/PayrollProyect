@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
 :root {
-  --primary: #8B0000;
-  --secondary: #f8d2e2;
-  --background: #0e0c1b;
-  --card-bg: rgba(30, 30, 45, 0.6);
-  --accent: #d6e0f0;
-  --text: #f3f3f3;
-  --hover:#8B0000;
+  --primary: #3A5A99;
+  --secondary: #CFE1F7;
+  --background: #0F172A;
+  --card-bg: rgba(30, 41, 59, 0.6);
+  --accent: #38BDF8;
+  --text: #F8FAFC;
+  --hover: #2563EB;
 }
 
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(120deg, #0e0c1b 0%, #1c1a2e 100%);
+  background: linear-gradient(120deg, #0F172A 0%, #1E293B 100%);
   color: var(--text);
   backdrop-filter: blur(5px);
 }
@@ -22,7 +22,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-image: url('./assets/fondo1.avif');
+  background-image: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('./assets/fondo1.avif');
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;

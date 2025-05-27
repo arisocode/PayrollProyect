@@ -38,13 +38,13 @@ public class Novelty {
     @Column(name = "Description", length = 100)
     private String description;
 
-    @Column(name = "NoveltyTypeId")
+    @Column(name = "Noveltytypeid")
     private Integer noveltyTypeId;
 
-    @Column(name = "EmployeeId")
+    @Column(name = "Employeeid")
     private Integer employeeId;
 
-    @Column(name = "ContractId")
+    @Column(name = "Contractid")
     private Integer contractId;
 
 }

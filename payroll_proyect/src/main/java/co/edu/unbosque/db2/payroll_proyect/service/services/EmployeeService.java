@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.db2.payroll_proyect.mapper.EmployeeMapper;
 import co.edu.unbosque.db2.payroll_proyect.model.dto.EmployeeDTO;
+import co.edu.unbosque.db2.payroll_proyect.model.dto.EmployeeToLiquidateDTO;
 import co.edu.unbosque.db2.payroll_proyect.model.entity.EmployeeWithBank;
+import co.edu.unbosque.db2.payroll_proyect.model.interfaces.IEmployeeProjection;
 import co.edu.unbosque.db2.payroll_proyect.repository.IEmployeeBankRepository;
 import co.edu.unbosque.db2.payroll_proyect.repository.IEmployeeRepository;
 import co.edu.unbosque.db2.payroll_proyect.service.interfaces.IEmployeeService;
@@ -142,4 +144,27 @@ public class EmployeeService implements IEmployeeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<EmployeeToLiquidateDTO> getEmployeesToLiquidate() {
+        List<IEmployeeProjection> projections = employeeRepository.findEmployeesToLiquidate();
+        return projections.stream()
+            .map(this::mapProjectionToDTO)
+            .collect(Collectors.toList());
+    }
+
+    private EmployeeToLiquidateDTO mapProjectionToDTO(IEmployeeProjection p) {
+        return new EmployeeToLiquidateDTO(
+            p.getEmployeeId(),
+            p.getNit(),
+            p.getName(),
+            p.getContractId(),
+            p.getContractCode(),
+            p.getSalary(),
+            p.getPaymentPeriod(),
+            p.getContractStartDate(),
+            p.getContractEndDate(),
+            p.getLastLiquidationDate(),
+            p.getNeedsLiquidation()
+        );
+    }
 }
