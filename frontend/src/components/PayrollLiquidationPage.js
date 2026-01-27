@@ -22,6 +22,7 @@ function PayrollLiquidationPage() {
         try {
         const response = await fetch(`${API_URL}/employees/to-liquidate`);
         const data = await response.json();
+        console.log("📦 empleados recibidos:", data);
         setEmpleados(data);
         } catch (error) {
         console.error("Error al cargar empleados:", error);

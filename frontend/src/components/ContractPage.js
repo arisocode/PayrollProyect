@@ -645,27 +645,29 @@ function ContractPage() {
 
         {/* Contenedor Tabla Terceros */}
         <aside className="terceros-container" style={{
-          background: 'rgba(30, 30, 45, 0.6)',
-          borderRadius: '8px',
-          boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+          background: '#f9f9f9', // fondo claro
+          borderRadius: '10px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)', // sombra suave
           padding: '20px',
           width: '350px',
           maxHeight: '600px',
           overflowY: 'auto'
         }}>
-          <h3 style={{ marginBottom: '15px', fontWeight: '600', fontSize: '1.25rem' }}>Terceros Asociados</h3>
+          <h3 style={{ marginBottom: '15px', fontWeight: '600', fontSize: '1.25rem', color: '#333' }}>Terceros Asociados</h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <label style={{ fontWeight: '500' }}>Tercero</label>
+              <label style={{ fontWeight: '500', color: '#555' }}>Tercero</label>
               <select
                 value={selectedThirdPartyId}
                 onChange={e => setSelectedThirdPartyId(e.target.value)}
                 className="input-field"
                 style={{
                   padding: '8px',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   border: '1px solid #ccc',
-                  width: '100%'
+                  width: '100%',
+                  backgroundColor: 'white',
+                  color: '#333'
                 }}
               >
                 <option value="">Seleccione</option>
@@ -676,7 +678,7 @@ function ContractPage() {
                 ))}
               </select>
 
-              {/* Porcentaje + Botón en una línea */}
+              {/* Porcentaje + Botón en línea */}
               <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input
                   type="number"
@@ -687,8 +689,10 @@ function ContractPage() {
                   style={{
                     flex: 1,
                     padding: '8px',
-                    borderRadius: '4px',
-                    border: '1px solid #ccc'
+                    borderRadius: '6px',
+                    border: '1px solid #ccc',
+                    backgroundColor: 'white',
+                    color: '#333'
                   }}
                 />
                 <button
@@ -697,8 +701,8 @@ function ContractPage() {
                   style={{
                     padding: '8px 12px',
                     border: 'none',
-                    borderRadius: '4px',
-                    backgroundColor: '#4CAF50',
+                    borderRadius: '6px',
+                    backgroundColor: '#28a745', // verde más suave
                     color: 'white',
                     cursor: 'pointer',
                     width: '100px'
@@ -711,15 +715,16 @@ function ContractPage() {
 
           <table style={{ marginTop: '12px', width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ backgroundColor: 'Black' }}>
-                <th style={{ padding: '8px', borderBottom: '1px solid #ccc', textAlign: 'left' }}>Tercero</th>
-                <th style={{ padding: '8px', borderBottom: '1px solid #ccc', textAlign: 'left' }}>Porcentaje</th>
+              <tr style={{ backgroundColor: '#e2e8f0' }}> {/* cabecera clara */}
+                <th style={{ padding: '10px', borderBottom: '1px solid #ccc', textAlign: 'left', color: '#333' }}>Tercero</th>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ccc', textAlign: 'left', color: '#333' }}>Porcentaje</th>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}></th>
               </tr>
             </thead>
             <tbody>
               {form.thirdParties.length === 0 ? (
                 <tr>
-                  <td colSpan="3" style={{ textAlign: 'center', padding: '20px', color: '#6b7280' }}>
+                  <td colSpan="3" style={{ textAlign: 'center', padding: '20px', color: '#888' }}>
                     Sin terceros asociados
                   </td>
                 </tr>
@@ -728,17 +733,17 @@ function ContractPage() {
                   const terceroInfo = terceros.find(t => t.nit === tp.nit);
                   return (
                     <tr key={tp.nit} style={{ borderBottom: '1px solid #eee' }}>
-                      <td style={{ padding: '8px' }}>{terceroInfo ? terceroInfo.nit : 'Tercero desconocido'}</td>
-                      <td style={{ padding: '8px' }}>{tp.percentage}%</td>
+                      <td style={{ padding: '8px', color: '#333' }}>{terceroInfo ? terceroInfo.nit : 'Tercero desconocido'}</td>
+                      <td style={{ padding: '8px', color: '#333' }}>{tp.percentage}%</td>
                       <td style={{ padding: '8px', textAlign: 'center' }}>
                         <button
                           onClick={() => deleteThirdParty(tp.nit)}
                           style={{
-                            backgroundColor: '#ef4444',
+                            backgroundColor: '#dc3545', // rojo más suave
                             color: 'white',
                             border: 'none',
                             padding: '5px 10px',
-                            borderRadius: '4px',
+                            borderRadius: '6px',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
