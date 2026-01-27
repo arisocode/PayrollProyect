@@ -112,6 +112,7 @@ usando únicamente PL/SQL para manejar la lógica de base de datos, y una arquit
 
 <img width="1600" height="845" alt="image" src="https://github.com/user-attachments/assets/c5a35f29-0ec9-48f8-a530-665ec2b278e1" />
 
+---
 
 **Autor:** Equipo Poblado Nómina
 
