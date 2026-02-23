@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #e0e0e0, #c2c2c2);
+  color: #333;
+}
+
+.login-box {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  width: 320px;
+  text-align: center;
+}
+
+h2 {
+  color: #222;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 10px;
+  color: #444;
+  text-align: left;
+}
+
+input {
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  outline: none;
+}
+
+input::placeholder {
+  color: #888;
+}
+
+.captcha-box {
+  background: #f0f0f0;
+  padding: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.2);
+  font-family: monospace;
+}
+
+button {
+  margin-top: 15px;
+  padding: 12px;
+  background-color: #777;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #555;
+}
